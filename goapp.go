@@ -1,81 +1,82 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "text/template"
 )
 
 /**Page sirve para la estructura de las paginas*/
 type Page struct {
-	Title string
-	Body  []byte
+    Title string
+    Body  []byte
 }
 
 func (p *Page) save() error {
-	filename := "./data/" + p.Title + ".txt"
-	err := ioutil.WriteFile(filename, p.Body, 0600)
-	return err
+    filename := "./data/" + p.Title + ".txt"
+    err := ioutil.WriteFile(filename, p.Body, 0600)
+    return err
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := "./data/" + title + ".txt"
-	body, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	page := &Page{Title: title, Body: body}
-	return page, err
+    filename := "./data/" + title + ".txt"
+    body, err := ioutil.ReadFile(filename)
+    if err != nil {
+        return nil, err
+    }
+    page := &Page{Title: title, Body: body}
+    return page, err
 }
 
-func viewHandler(w http.ResponseWriter, r *http.Request) {
-	title := r.URL.Path[len("/view/"):]
-	p, err := loadPage(title)
+func showHandler(w http.ResponseWriter, r *http.Request) {
+    title := r.URL.Path[len("/show/"):]
+    p, err := loadPage(title)
+    if err != nil {
+        fmt.Fprintf(w, "<h1>%s</h1>", err)
+    }
+    //fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+    //template file
+    t, err := template.ParseFiles("./views/show.html")
 	if err != nil {
-		fmt.Fprintf(w, "<h1>%s</h1>", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+	t.Execute(w, p)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
-	title := r.URL.Path[len("/edit/"):]
-	page, err := loadPage(title)
-	if err != nil {
-		page = &Page{Title: title}
-	}
-	fmt.Fprintf(w, `
-		<html>
-			<head>
-				<title>%s</title>
-			</head>
-			<body>
-				<h1>%s</h1>
-				<form method="POST" action="/save/%s">
-					<textarea name="body">%s</textarea>
-					<button>Guardar</button>
-				</form>
-			</body>
-		</html>
-	`, page.Title, page.Title, page.Title, page.Body)
+    title := r.URL.Path[len("/edit/"):]
+    page, err := loadPage(title)
+    if err != nil {
+        page = &Page{Title: title}
+    }
+    //template file
+    t, err := template.ParseFiles("./views/edit.html")
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+    t.Execute(w, page)
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request){
-	title := r.URL.Path[len("/save/"):]
-	body := r.FormValue("body")
-	page := &Page{Title:title, Body: []byte(body)}
-	page.save()
-	http.Redirect(w, r, "/view/" + title, http.StatusFound)
+    title := r.URL.Path[len("/save/"):]
+    body := r.FormValue("body")
+    page := &Page{Title:title, Body: []byte(body)}
+    page.save()
+    http.Redirect(w, r, "/show/" + title, http.StatusFound)
 }
 
 func welcomeHandler(w http.ResponseWriter, r *http.Request){
-	fmt.Fprintf(w, "<h1>Bienvenidos</h1>")
+    fmt.Fprintf(w, "<h1>Bienvenidos</h1>")
 }
 
 func main() {
-	http.HandleFunc("/", welcomeHandler)
-	http.HandleFunc("/view/", viewHandler)
-	http.HandleFunc("/edit/", editHandler)
-	http.HandleFunc("/save/", saveHandler)
-	fmt.Println("Ingrese a http://localhost:8080/view/")
-	http.ListenAndServe(":8080", nil)
+    fs := http.FileServer(http.Dir("./public"))
+    http.Handle("/css/", fs)
+    http.HandleFunc("/", welcomeHandler)
+    http.HandleFunc("/show/", showHandler)
+    http.HandleFunc("/edit/", editHandler)
+    http.HandleFunc("/save/", saveHandler)
+    fmt.Println("Ingrese a http://localhost:8080/show/")
+    http.ListenAndServe(":8080", nil)
 }

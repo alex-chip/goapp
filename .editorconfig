@@ -1,0 +1,13 @@
+root = true
+
+[*.go]
+ident_style = tabs
+ident_size = 3
+
+[*.{html, js, json}]
+ident_style = size
+ident_size = 3
+
+[*.{scss, css}]
+ident_style = size
+ident_size = 2

@@ -1,0 +1,45 @@
+a.button,
+.button {
+  align-items: center;
+  border: 0;
+  border-radius: 2em;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-size: 0.9em;
+  font-weight: bold;
+  justify-content: center;
+  line-height: 2;
+  margin: 0.5em auto 0 auto;
+  padding: 0;
+  text-decoration: none;
+  width: 50%;
+
+  &:hover {
+    color: #FFF;
+    text-decoration: none;
+  }
+
+  &--primary {
+    background: $color5;
+
+    &:hover,
+    &:active,
+    &.active{
+      background: darken($color5, 10);
+    }
+  }
+
+  &--warning {
+    background: $color4;
+    &:hover,
+    &:active,
+    &.active{
+      background: darken($color4, 10);
+    }
+  }
+}
+
+.buttons {
+  margin-top: 2em;
+}

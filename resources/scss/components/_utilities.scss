@@ -1,0 +1,12 @@
+.container {
+  margin: auto;
+  max-width: 768px;
+  padding: 20px;
+  width: 100%;
+  border-radius: .3em;
+
+  @media screen and (min-width: 768px) {
+    border: 1.5px solid $color5;
+    margin-top: 30px;
+  }
+}

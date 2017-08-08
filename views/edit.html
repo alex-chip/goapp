@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>{{ .Title }}</title>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ .Title }}</h1>
+        <form method="POST" action="/save/{{.Title}}">
+            <textarea name="body">{{ printf "%s" .Body}}</textarea>
+            <button class="button button--primary">Guardar</button>
+        </form>
+    </div>
+</body>
+</html>
