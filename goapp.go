@@ -77,6 +77,6 @@ func main() {
     http.HandleFunc("/show/", showHandler)
     http.HandleFunc("/edit/", editHandler)
     http.HandleFunc("/save/", saveHandler)
-    fmt.Println("Ingrese a http://localhost:8080/show/")
-    http.ListenAndServe(":8080", nil)
+    fmt.Println("Ingrese a http://localhost:1700/show/")
+    http.ListenAndServe(":1700", nil)
 }
