@@ -1,0 +1,5 @@
+<p>El tema Golang-es</p><p>Objetivos:</p><ul><li>Trabajar en equipo con git y github.</li><li>Crear y leer archivos del sistema.</li><li>Crear un servidor web.</li><li>Usar templates para las páginas web.</li><li>Servir archivos estáticos.</li><li>Crear estilos con Sass.</li><li>Subir la aplicación a producción en Digital Ocean.</li></ul><h2>Team Golang-es</h2><p><br></p>
+
+<div class="video">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0fYb43gIl6I?ecver=1" frameborder="0" allowfullscreen=""></iframe>
+</div>
